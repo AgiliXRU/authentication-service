@@ -1,6 +1,9 @@
 package ru.agilix.auth.test;
 
-import io.cucumber.java.ru.Дано;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.cucumber.java.ru.Когда;
 import io.cucumber.java.ru.Тогда;
 import org.springframework.http.ResponseEntity;
@@ -11,54 +14,61 @@ import ru.agilix.auth.domain.CheckPhoneNumberResponse;
 import ru.agilix.auth.domain.SetPinCodeRequest;
 import ru.agilix.auth.domain.SetPinCodeResponse;
 
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AuthenticationStepDefinitions {
 
     private String url = "http://localhost:8080";
     private RestTemplate restTemplate = new RestTemplate();
 
-    private String phoneNumber;
-    private Boolean isUserExist;
     private boolean isResponseOk;
+    private String path;
 
-    @Дано("Номер телефона пользователя {string}")
-    public void userPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    @Given("I use REST-service on address {string} with version {string}")
+    public void iUseRESTServiceOnAddressWithVersion(String url, String version) {
+        this.url = url;
     }
 
-    @Когда("Проверяем наличие пользователя")
-    public void checkIfUserExists() {
+    @And("I want to send POST-request {string}")
+    public void iSendPOST(String path) {
+        this.path = path;
+    }
+
+    @When("I sending phoneNumber with value {string}")
+    public void iSendingWithValue(String phoneNumber) {
         final CheckPhoneNumberRequest request = new CheckPhoneNumberRequest();
         request.setPhoneNumber(phoneNumber);
 
-        CheckPhoneNumberResponse response = restTemplate.postForObject(url + "/v1/auth/checkPhoneNumber", request, CheckPhoneNumberResponse.class);
-        this.isUserExist = Optional.ofNullable(response).orElse(new CheckPhoneNumberResponse()).getAvailable();
+        CheckPhoneNumberResponse response = restTemplate.postForObject(url + path, request, CheckPhoneNumberResponse.class);
+        this.isResponseOk = (response != null);
     }
 
-    @Тогда("Пользователь {string} найден")
-    public void isUserExist(String yesNo) {
-        assertEquals(yesNo.equalsIgnoreCase(""), isUserExist);
+    @Then("I receive in JSON body")
+    public void iReceiveInJSONBody() {
+        assertTrue(isResponseOk);
     }
 
     @Когда("Устанавливае PIN-кода {string}")
     public void userSetsPinCode(String pinCode) {
+
+    }
+    @Тогда("Установка {string} проходит успешно")
+    public void isResponseOk(String yesNo) {
+        assertEquals(yesNo.equalsIgnoreCase(""), isResponseOk);
+    }
+
+
+    @When("I sending phoneNumber with value {string} and PIN-code {string}")
+    public void iSendingPhoneNumberWithValueAndPINCode(String phoneNumber, String pinCode) {
         SetPinCodeRequest request = new SetPinCodeRequest();
         request.setPhoneNumber(phoneNumber);
         request.setPinCode(pinCode);
 
         try {
-            ResponseEntity<SetPinCodeResponse> response = restTemplate.postForEntity(url + "/v1/auth/setPinCode", request, SetPinCodeResponse.class);
+            ResponseEntity<SetPinCodeResponse> response = restTemplate.postForEntity(url + path, request, SetPinCodeResponse.class);
             isResponseOk = response.getStatusCode().is2xxSuccessful();
         } catch (RestClientException e) {
             //isResponseOk = true;
         }
-    }
-
-    @Тогда("Установка {string} проходит успешно")
-    public void isResponseOk(String yesNo) {
-        assertEquals(yesNo.equalsIgnoreCase(""), isResponseOk);
     }
 }
