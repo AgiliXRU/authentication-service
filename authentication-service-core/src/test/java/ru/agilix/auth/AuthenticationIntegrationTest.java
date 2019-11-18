@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class AuthenticationComponentTest {
+class AuthenticationIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
