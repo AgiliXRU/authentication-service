@@ -3,27 +3,29 @@ package ru.agilix.auth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.client.RestOperations;
 import ru.agilix.auth.service.GeneratorService;
 import ru.agilix.dao.OneTimePasswordRepository;
 import ru.agilix.dao.TokenRepository;
 import ru.agilix.domain.OneTimePassword;
 import ru.agilix.domain.Token;
 import ru.agilix.message.sms.domain.SmsDTO;
-import ru.agilix.message.sms.service.SmsService;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -48,8 +50,12 @@ class AuthenticationComponentTest {
     @MockBean
     private GeneratorService generatorService;
 
+    static {
+        System.setProperty("SMS_GATE_URL", "someUrl");
+    }
+
     @MockBean
-    private SmsService smsService;
+    private RestOperations restOperations;
 
 
     @BeforeEach
@@ -77,7 +83,7 @@ class AuthenticationComponentTest {
 
         //Set PinCode and send SmsCode
         when(generatorService.generateOneTimePassword()).thenReturn(smsCode);
-        when(smsService.send(any(SmsDTO.class))).thenReturn(Optional.of(""));
+        when(restOperations.postForEntity(nullable(String.class), any(SmsDTO.class), ArgumentMatchers.<Class<String>>any())).thenReturn(ResponseEntity.ok(""));
         when(generatorService.generateToken()).thenReturn(confirmationToken);
         performPostRequest(
                 "/v1/auth/setPinCode", "{\"phoneNumber\":\"" + phoneNumber + "\", \"pinCode\":\"" + pinCode + "\"}",
