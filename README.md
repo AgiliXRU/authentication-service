@@ -31,4 +31,4 @@ docker-compose up -d --build
 
 ## 3. Access 
  - [Swagger UI - http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
- - [Wiremock - http://localhost:8081/__admin/webapp/mappings][http://localhost:8081/__admin/webapp/mappings]
+ - [Wiremock - http://localhost:8081/__admin/webapp/mappings](http://localhost:8081/__admin/webapp/mappings)
