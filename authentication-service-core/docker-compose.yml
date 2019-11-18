@@ -7,28 +7,20 @@ services:
     image: authentication-service
     container_name: authentication-service
     build:
-      context: ./authentication-service-core
+      context: .
       args:
         jarFile: "build/libs/authentication-service-core-1.0.jar"
     depends_on:
-      - sms-gate
+      - wiremock
     environment:
-      SMS_GATE_URL: "http://sms-gate:8080"
+      SMS_GATE_URL: "http://wiremock:8080"
     ports:
       - "8080:8080"
     restart: always
 
-  sms-gate:
-    image: sms-gate
-    container_name: sms-gate
-    build:
-      context: ./authentication-service-sms-gate
-      args:
-        jarFile: "build/libs/authentication-service-sms-gate-1.0.jar"
-    environment:
-      TWILIO_AUTH_SID: "1"
-      TWILIO_AUTH_TOKEN: "1"
-      TWILIO_FROM: "1"
+  wiremock:
+    image: holomekc/wiremock-gui
+    container_name: wiremock
     ports:
       - "8081:8080"
     restart: always

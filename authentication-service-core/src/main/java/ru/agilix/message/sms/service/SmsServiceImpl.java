@@ -1,10 +1,10 @@
 package ru.agilix.message.sms.service;
 
-import com.twilio.Twilio;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.agilix.Env;
+import org.springframework.web.client.RestOperations;
 import ru.agilix.message.sms.domain.SmsDTO;
 
 import javax.annotation.PostConstruct;
@@ -13,29 +13,26 @@ import java.util.Optional;
 @Service
 public class SmsServiceImpl implements SmsService {
 
-    private Env env;
+    @Value("${SMS_GATE_URL}")
+    private String smsGateUrl;
 
-    public SmsServiceImpl(Env env) {
-        this.env = env;
-    }
+    @Autowired
+    private RestOperations restOperations;
 
     @PostConstruct
-    public void postConstruct() {
-        Twilio.init(env.getTwilioAuthSid(), env.getTwilioAuthToken());
+    private void postConstruct() {
+        System.out.println("SMS GW: " + smsGateUrl);
     }
 
     @Override
     public Optional<String> send(SmsDTO smsDTO) {
-        try {
-            Message message = Message.creator(
-                    new PhoneNumber(smsDTO.getNumber()),
-                    new PhoneNumber(env.getTwilioFrom()),
-                    smsDTO.getBody()).create();
-            return Optional.of(message.getSid());
-        } catch (RuntimeException e) {
+        ResponseEntity<String> response = restOperations.postForEntity(smsGateUrl + "/v1/sms/send", smsDTO, String.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return Optional.ofNullable(response.getBody());
+        } else {
             System.err.println("Failed to send SMS to " + smsDTO.getNumber());
+            return Optional.empty();
         }
-        return Optional.empty();
 
     }
 

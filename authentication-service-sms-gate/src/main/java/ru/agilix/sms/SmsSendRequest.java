@@ -1,15 +1,9 @@
-package ru.agilix.message.sms.domain;
+package ru.agilix.sms;
 
-public class SmsDTO {
-
+class SmsSendRequest {
     private String number;
 
     private String body;
-
-    public SmsDTO(String number, String body) {
-        this.number = number;
-        this.body = body;
-    }
 
     public String getNumber() {
         return number;

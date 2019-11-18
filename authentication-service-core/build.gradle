@@ -18,8 +18,6 @@ dependencies {
 
     implementation "org.springdoc:springdoc-openapi-ui:1.2.0"
 
-    implementation "com.twilio.sdk:twilio:7.44.0"
-
     testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
 

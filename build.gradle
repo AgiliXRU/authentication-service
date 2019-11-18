@@ -4,6 +4,7 @@ plugins {
 
 subprojects {
     apply plugin: "java"
+    apply plugin: "jacoco"
 
     wrapper.gradleVersion = "5.5.1"
 
@@ -18,6 +19,14 @@ subprojects {
         mockitoVersion = "2.23.0"
     }
 
+    jacocoTestReport {
+        reports {
+            xml.enabled false
+            csv.enabled false
+            html.enabled true
+        }
+    }
+
 }
 
 allprojects {
@@ -25,4 +34,5 @@ allprojects {
     repositories {
         mavenCentral()
     }
+
 }

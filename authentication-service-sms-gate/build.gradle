@@ -1,0 +1,15 @@
+plugins {
+    id "org.springframework.boot" version "2.2.0.RELEASE"
+    id "io.spring.dependency-management" version "1.0.7.RELEASE"
+}
+
+sourceCompatibility = 8
+targetCompatibility = 8
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+
+    implementation "com.twilio.sdk:twilio:7.44.0"
+}
