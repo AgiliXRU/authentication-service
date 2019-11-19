@@ -1,0 +1,13 @@
+{
+  "request": {
+    "url": "/v1/sms/send",
+    "method": "POST"
+  },
+  "response": {
+    "status": 200,
+    "body": "ok",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

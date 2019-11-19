@@ -1,5 +1,6 @@
 plugins {
     id "com.gradle.build-scan" version "2.0.2"
+    id "com.avast.gradle.docker-compose" version "0.10.3"
 }
 
 subprojects {
@@ -25,6 +26,10 @@ subprojects {
             csv.enabled false
             html.enabled true
         }
+    }
+
+    dockerCompose {
+        useComposeFiles = ["docker-compose.component.yml"]
     }
 
 }
