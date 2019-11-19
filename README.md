@@ -2,6 +2,10 @@
 
 Kata for training
 
+## Requires
+ - Java 8+
+ - Docker Compose
+
 ## Branches
 ### SUT - docker component
 - **v1-manual-e2e** - Manual E2E
@@ -13,22 +17,11 @@ Kata for training
 - **v5-integration**  - Integration
 - **master** - +Unit tests
 
-## 1. Gradle clean & build
-### Windows
+## Run application
 ```
-gradlew.bat clean build
-```
-
-### MacOS / Linux
-```
-./gradlew clean build
-``` 
-
-## 2. Run application
-```
-docker-compose up -d --build
+gradlew clean build composeUp
 ```
 
 ## 3. Access 
  - [Swagger UI - http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
- - [Wiremock - http://localhost:8081/__admin/webapp/mappings][http://localhost:8081/__admin/webapp/mappings]
+ - [Wiremock - http://localhost:8081/__admin/webapp/mappings](http://localhost:8081/__admin/webapp/mappings)
